@@ -131,28 +131,29 @@ public class WebServer extends Thread {
                 isLoop = false;
             }
         } finally {
-            try {
-                if (serverSocket != null) {
-                    serverSocket.close();
-                }
-                // 回调通知服务结束
-                if (mListener != null) {
-                    mListener.onStopped();
-                }
-            } catch (IOException e) {
+        	socketClose();
+            // 回调通知服务结束
+            if (mListener != null) {
+                mListener.onStopped();
             }
         }
     }
 
     public void close() {
         isLoop = false;
-        try {
-            if (serverSocket != null) {
-                serverSocket.close();
-            }
-        } catch (IOException e) {
-        }
+        socketClose();
     }
+    
+	private void socketClose() {
+		try {
+			if (serverSocket != null) {
+				serverSocket.close();
+				serverSocket = null;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
     public interface OnWebServListener {
         void onStarted();
